@@ -1,7 +1,7 @@
 
 
 
-
+from os import link
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -12,29 +12,14 @@ import time
 import openpyxl
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
+from selenium.common.exceptions import NoSuchElementException
 
 
-#Create Workbook and name Sheet 1
-wk = openpyxl.Workbook()
-sh = wk.active
-sh.title="Ebay All Int."
+with open("Odyssey Go1.csv", "w") as file:
+    file.write("Title; Price; Link \n")
 
-#Create Sheet 2
-wk.create_sheet(title="Ebay Domestic")
-sh1= wk["Ebay Domestic"]
-
-#Create Headers
-sh["A1"].value="Title"
-sh["B1"].value="Price"
-sh["C1"].value="Description"
-sh["D1"].value="Link"
-
-sh1["A1"].value="Title"
-sh1["B1"].value="Price"
-sh1["C1"].value="Description"
-sh1["D1"].value="Link"
-
-wk.save("C:\\Users\Jerry\Documents\Python Automation Project\Odyssey Go1.xlsx")
 
 #Direct website to info I want to import
 
@@ -145,12 +130,28 @@ try:
 except:
     time.sleep(10)
 
-driver.implicitly_wait(30)
-Linkwanted = driver.find_element(By.TAG_NAME, "h3")
-driver.print(Linkwanted)
+    #Create Data List
+
+WebDriverWait(driver,10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "title-link"))
+)
+game_titles = driver.find_elements_by_class_name( "title-link")
+game_prices = driver.find_elements_by_class_name( "strong-price")
+
+with open("Odyssey Go1.csv", "a") as file:
+    for i in range(len("game_titles")):
+        file.write(game_titles[i].text + ";" + game_prices[i].text + "\n")
+
+    #Place Lists On Excel Spreadsheet
+
+
+
+
+
 
 
 time.sleep(30)
+
 
 
 
