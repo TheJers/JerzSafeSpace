@@ -177,7 +177,7 @@ while price_iter < len(price_list):
 wk.save("C:\\Users\Jerry\Documents\Python Automation Project\Odyssey Go1.xlsx")
 
 
-game_links = driver.find_elements_by_xpath('//div[@class="p-ml-1 p-mb-2 p-mt-1"]/a/@href') 
+game_links = driver.find_elements_by_xpath('//div[@class="p-ml-1 p-mb-2 p-mt-1"]/a/href') 
 link_list = []
 for y in game_links:
     link_list.append(y.text)
