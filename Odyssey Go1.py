@@ -1,7 +1,5 @@
-
-
-
 from os import link
+from openpyxl.descriptors.base import Length
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -17,9 +15,25 @@ from selenium.webdriver.support.expected_conditions import presence_of_element_l
 from selenium.common.exceptions import NoSuchElementException
 
 
-with open("Odyssey Go1.csv", "w") as file:
-    file.write("Title; Price; Link \n")
+#Create Workbook and name Sheet 1
+wk = openpyxl.Workbook()
+sh = wk.active
+sh.title = "Ebay All Int."
 
+#Create Sheet 2
+wk.create_sheet(title="Ebay Domestic")
+sh1 = wk["Ebay Domestic"]
+
+#Create Headers
+sh["A1"].value="Title"
+sh["B1"].value="Price"
+sh["C1"].value="Link"
+
+sh1.cell(1,1).value="Title"
+sh1["B1"].value="Price"
+sh1["C1"].value="Link"
+
+wk.save("C:\\Users\Jerry\Documents\Python Automation Project\Odyssey Go1.xlsx")
 
 #Direct website to info I want to import
 
@@ -136,13 +150,46 @@ WebDriverWait(driver,10).until(
         EC.presence_of_element_located((By.CLASS_NAME, "title-link"))
 )
 game_titles = driver.find_elements_by_class_name( "title-link")
+title_list = []
+for i in game_titles:
+    title_list.append(i.text)
+title_iter = 1
+
+while title_iter < len(title_list):
+    print(title_list[title_iter])
+    sh.cell(title_iter,1).value=title_list[title_iter]
+    title_iter += 1
+
+wk.save("C:\\Users\Jerry\Documents\Python Automation Project\Odyssey Go1.xlsx")
+
+
 game_prices = driver.find_elements_by_class_name( "strong-price")
+price_list = []
+for x in game_prices:
+    price_list.append(x.text)
+price_iter = 1
 
-with open("Odyssey Go1.csv", "a") as file:
-    for i in range(len("game_titles")):
-        file.write(game_titles[i].text + ";" + game_prices[i].text + "\n")
+while price_iter < len(price_list):
+    print(price_list[price_iter])
+    sh.cell(price_iter,2).value=price_list[price_iter]
+    price_iter += 1
 
-    #Place Lists On Excel Spreadsheet
+wk.save("C:\\Users\Jerry\Documents\Python Automation Project\Odyssey Go1.xlsx")
+
+
+game_links = driver.find_elements_by_xpath('//div[@class="p-ml-1 p-mb-2 p-mt-1"]/a/@href') 
+link_list = []
+for y in game_links:
+    link_list.append(y.text)
+link_iter = 1
+
+while link_iter < len(link_list):
+    print(link_list[link_iter])
+    sh.cell(link_iter,3).value=link_list[link_iter]
+    link_iter += 1
+
+wk.save("C:\\Users\Jerry\Documents\Python Automation Project\Odyssey Go1.xlsx")
+
 
 
 
@@ -151,9 +198,6 @@ with open("Odyssey Go1.csv", "a") as file:
 
 
 time.sleep(30)
-
-
-
 
 
 
